@@ -4,17 +4,33 @@ const config: StorybookConfig = {
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
-    "@storybook/preset-create-react-app",
     "@storybook/addon-interactions",
-  ],
+    {
+      name: '@storybook/preset-create-react-app',
+      options: {
+        craOverrides: {
+          fileLoaderExcludes: ['less']
+        }
+      }
+    },
+    {
+      name: '@storybook/addon-styling',
+      options: {
+        less: {
+          // Require your Less preprocessor here
+          implementation: require('less')
+        }
+      }
+    }, "@storybook/addon-mdx-gfm"],
   framework: {
     name: "@storybook/react-webpack5",
-    options: {},
+    options: {}
   },
   docs: {
-    autodocs: true,
-    defaultName: 'Documentation',
+    autodocs: 'tag'
+    // defaultName: 'Documentation',
   },
-  staticDirs: ["../public"],
+
+  staticDirs: ["../public"]
 };
 export default config;

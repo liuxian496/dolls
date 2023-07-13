@@ -1,0 +1,231 @@
+import {
+  Meta,
+  Primary,
+  Controls,
+  Story,
+  Source,
+  Canvas,
+  ArgTypes,
+} from "@storybook/blocks";
+
+import { Description } from "../components/description/description";
+
+import * as ButtonStories from "./memo.stories.tsx";
+
+import { Name } from "../components/memo/name";
+
+<Meta of={ButtonStories} />
+
+# Memo
+
+<Description>测试 React memo，何时有效，何时无效。</Description>
+
+## Components（测试使用的组件）
+
+### Name
+
+<Description>接收外部参数<code>name</code>，并记录自身的渲染次数。</Description>
+
+<Source code={
+  `
+import React, { useRef } from 'react';
+
+export const Name = (props: {
+    name: string
+}) => {
+    const { name } = props;
+    const renderCount = useRef(0);
+    renderCount.current = renderCount.current + 1;
+
+    console.log(\`%c Name was rendered at \${new Date().toLocaleTimeString()}\`, 'color: #6F8AB7');
+
+    return (
+        <div>
+            {\`Hello: \${name}, Name was rendered \${renderCount.current} times\`}
+        </div>
+    )
+
+};
+`
+} language="tsx" dark />
+
+### MemoName
+
+<Description>接收外部参数<code>name</code>，并记录自身的渲染次数。使用<code>memo</code>，将组件memoized</Description>
+
+<Source code={
+`
+import React, { useRef, memo } from 'react';
+
+export const MemoName = memo(function MemoName(props: {
+    name: string
+}) {
+    const { name } = props;
+    const renderCount = useRef(0);
+    renderCount.current++;
+
+    console.log(\`%c MemoName was rendered at \${new Date().toLocaleTimeString()}\`, 'color: #E85F5C');
+
+    return (
+        <div>
+            {\`Hello: \${name}, MemoName was rendered \${renderCount.current} times\`}
+        </div>
+    )
+
+});
+`
+} language="tsx" dark />
+
+### MemeAge
+
+<Description>接收外部参数<code>age</code>，并记录自身的渲染次数。使用<code>memo</code>，将组件memoized</Description>
+
+<Source code={
+`
+import React, { useRef, memo } from 'react';
+
+export const MemoAge = memo(function MemoMessage(props: {
+    age: string
+}) {
+    const { age } = props;
+    const renderCount = useRef(0);
+    renderCount.current++;
+
+    console.log(\`%c MemoAge was rendered at \${new Date().toLocaleTimeString()}\`, 'color: #EEEBD3');
+
+    return (
+        <div>
+            {\`Age is \${age}, MemoAge was rendered \${renderCount.current} times\`}
+        </div>
+    )
+
+});
+`
+} language="tsx" dark />
+
+### MemoPerson
+
+<Description>容器组件，并记录自身的渲染次数。使用<code>memo</code>，将组件memoized</Description>
+
+<Source code={
+`
+import React, { useRef, memo } from 'react';
+
+export const MemoPerson = memo(function MemoPerson(props: any) {
+    const { children, id } = props;
+    const renderCount = useRef(0);
+    renderCount.current++;
+
+    console.log(\`%c MemoPerson \${id} was rendered at \${new Date().toLocaleTimeString()}\`, 'color: #E85F5C');
+
+    return (
+        <div>
+            {\`MemoPerson \${id} was rendered \${renderCount.current} times\`}
+            {children}
+        </div>
+    )
+
+});
+`
+} language="tsx" dark />
+
+## Test（测试页面）
+
+### MemoValidTest
+
+<Source code={
+`
+import React, { useState } from 'react';
+import { Name } from '../components/memo/name';
+import { MemoName } from '../components/memo/memoName';
+
+export const MemoValidTest = () => {
+    const [name, setName] = useState('');
+    const [age, setAge] = useState('');
+
+    function handleNameChange(e: any) {
+        setName(e.target.value);
+    }
+
+    function handleAgeChange(e: any) {
+        setAge(e.target.value);
+    }
+
+    return (
+        <>
+            <label>
+                Name{': '}
+                <input data-testid="name" value={name} onChange={handleNameChange} />
+            </label>
+            <label>
+                Age{': '}
+                <input data-testid="age" value={age} onChange={handleAgeChange} />
+            </label>
+            <Name name={name} />
+            <MemoName name={name} />
+        </>
+    )
+
+}
+`
+} language="tsx" dark />
+
+### MemoInValidTest
+
+<Source code={
+`
+import React, { useState } from 'react';
+import { MemoPerson } from '../components/memo/memoPerson';
+import { Name } from '../components/memo/name';
+import { MemoAge } from '../components/memo/memoAge';
+
+export const MemoInValidTest = () => {
+    const [name, setName] = useState('');
+    const [age, setAge] = useState('');
+
+    function handleNameChange(e: any) {
+        setName(e.target.value);
+    }
+
+    function handleAgeChange(e: any) {
+        setAge(e.target.value);
+    }
+
+    return (
+        <>
+            <label>
+                Name{': '}
+                <input data-testid="name" value={name} onChange={handleNameChange} />
+            </label>
+            <label>
+                Age{': '}
+                <input data-testid="age" value={age} onChange={handleAgeChange} />
+            </label>
+            <MemoPerson id="Tom">
+                <Name name={name} />
+            </MemoPerson>
+            <MemoPerson id="Jerry">
+                <MemoAge age={age} />
+            </MemoPerson>
+            <MemoPerson id="BigBrother" />
+            <MemoPerson id="BigBrother2" >
+                <div></div>
+            </MemoPerson>
+        </>
+    )
+
+}
+`
+} language="tsx" dark />
+
+{/* <Primary /> */}
+
+{/* ## Props */}
+
+{/* <Controls /> */}
+
+<Source code={
+`
+
+`
+} language="tsx" dark />
