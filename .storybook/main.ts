@@ -13,6 +13,7 @@ const config: StorybookConfig = {
         }
       }
     },
+    '@storybook/addon-coverage',
     {
       name: '@storybook/addon-styling',
       options: {

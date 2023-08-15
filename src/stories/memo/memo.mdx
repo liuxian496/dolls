@@ -1,3 +1,5 @@
+import '../../../src/components/dolls.less';
+
 import {
   Meta,
   Primary,
@@ -8,23 +10,21 @@ import {
   ArgTypes,
 } from "@storybook/blocks";
 
-import { Description } from "../components/description/description";
+import * as MemoStories from "./memo.stories.tsx";
 
-import * as ButtonStories from "./memo.stories.tsx";
+import { Summary } from 'litten';
 
-import { Name } from "../components/memo/name";
-
-<Meta of={ButtonStories} />
+<Meta of={MemoStories} />
 
 # Memo
 
-<Description>测试 React memo，何时有效，何时无效。</Description>
+<Summary color="note">测试 React memo，何时有效，何时无效。</Summary>
 
 ## Components（测试使用的组件）
 
 ### Name
 
-<Description>接收外部参数<code>name</code>，并记录自身的渲染次数。</Description>
+<Summary color="note">接收外部参数<code>name</code>，并记录自身的渲染次数。</Summary>
 
 <Source code={
   `
@@ -51,7 +51,7 @@ export const Name = (props: {
 
 ### MemoName
 
-<Description>接收外部参数<code>name</code>，并记录自身的渲染次数。使用<code>memo</code>，将组件memoized</Description>
+<Summary color="note">接收外部参数<code>name</code>，并记录自身的渲染次数。使用<code>memo</code>，将组件memoized</Summary>
 
 <Source code={
 `
@@ -78,7 +78,7 @@ export const MemoName = memo(function MemoName(props: {
 
 ### MemeAge
 
-<Description>接收外部参数<code>age</code>，并记录自身的渲染次数。使用<code>memo</code>，将组件memoized</Description>
+<Summary color="note">接收外部参数<code>age</code>，并记录自身的渲染次数。使用<code>memo</code>，将组件memoized</Summary>
 
 <Source code={
 `
@@ -105,7 +105,7 @@ export const MemoAge = memo(function MemoMessage(props: {
 
 ### MemoPerson
 
-<Description>容器组件，并记录自身的渲染次数。使用<code>memo</code>，将组件memoized</Description>
+<Summary color="note">容器组件，并记录自身的渲染次数。使用<code>memo</code>，将组件memoized</Summary>
 
 <Source code={
 `
