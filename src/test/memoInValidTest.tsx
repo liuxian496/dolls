@@ -1,53 +1,52 @@
-import React, { useState, memo, useRef } from 'react';
+import React, { useState } from 'react';
 
 import { expect } from '@storybook/jest';
 import { userEvent, within } from '@storybook/testing-library';
-import { Meta, StoryObj } from '@storybook/react';
 
+import { MemoStory } from '../stories/memo/memo.stories';
+
+import { MemoPerson } from '../components/memo/memoPerson';
 import { Name } from '../components/memo/name';
 import { MemoAge } from '../components/memo/memoAge';
-import { MemoPerson } from '../components/memo/memoPerson';
-import { MemoValidTest } from '../tests/MemoValidTest';
-import { MemoInValidTest } from '../tests/MemoInValidTest';
-
-export default {
-    title: 'Example/Memo',
-} as Meta;
-
-type Story = StoryObj;
 
 
-export const MemoValid: Story = {
-    parameters: {
-        controls: { hideNoControlsWarning: true },
-    },
-    render: () => <MemoValidTest />,
-    play: async ({ canvasElement }) => {
-        const canvas = await within(canvasElement);
+const MemoInValidTest = () => {
+    const [name, setName] = useState('');
+    const [age, setAge] = useState('');
 
-        await userEvent.type(canvas.getByTestId('name'), 'T');
-
-        expect(
-            canvas.getByText('Hello: T, Name was rendered 2 times')
-        ).toBeInTheDocument();
-
-        expect(
-            canvas.getByText('Hello: T, MemoName was rendered 2 times')
-        ).toBeInTheDocument();
-
-        await userEvent.type(canvas.getByTestId('age'), '12');
-
-        expect(
-            canvas.getByText('Hello: T, Name was rendered 4 times')
-        ).toBeInTheDocument();
-
-        expect(
-            canvas.getByText('Hello: T, MemoName was rendered 2 times')
-        ).toBeInTheDocument();
+    function handleNameChange(e: any) {
+        setName(e.target.value);
     }
-}
 
-export const MemoInvalid: Story = {
+    function handleAgeChange(e: any) {
+        setAge(e.target.value);
+    }
+
+    return (
+        <>
+            <label>
+                Name{': '}
+                <input data-testid="name" value={name} onChange={handleNameChange} />
+            </label>
+            <label>
+                Age{': '}
+                <input data-testid="age" value={age} onChange={handleAgeChange} />
+            </label>
+            <MemoPerson id="Tom">
+                <Name name={name} />
+            </MemoPerson>
+            <MemoPerson id="Jerry">
+                <MemoAge age={age} />
+            </MemoPerson>
+            <MemoPerson id="BigBrother" />
+            <MemoPerson id="BigBrother2" >
+                <div></div>
+            </MemoPerson>
+        </>
+    )
+};
+
+export const MemoInvalid: MemoStory = {
     parameters: {
         controls: { hideNoControlsWarning: true },
     },
