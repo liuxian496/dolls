@@ -3,14 +3,12 @@ import React, { useState } from 'react';
 import { expect } from '@storybook/jest';
 import { userEvent, within } from '@storybook/testing-library';
 
-import { MemoStory } from '../stories/memo/memo.stories';
+import { MemoStory } from '../../stories/memo/memo.stories';
 
-import { MemoPerson } from '../components/memo/memoPerson';
-import { Name } from '../components/memo/name';
-import { MemoAge } from '../components/memo/memoAge';
+import { Name } from '../../components/memo/name';
+import { MemoName } from '../../components/memo/memoName';
 
-
-const MemoInValidTest = () => {
+const MemoValidTest = () => {
     const [name, setName] = useState('');
     const [age, setAge] = useState('');
 
@@ -32,25 +30,17 @@ const MemoInValidTest = () => {
                 Age{': '}
                 <input data-testid="age" value={age} onChange={handleAgeChange} />
             </label>
-            <MemoPerson id="Tom">
-                <Name name={name} />
-            </MemoPerson>
-            <MemoPerson id="Jerry">
-                <MemoAge age={age} />
-            </MemoPerson>
-            <MemoPerson id="BigBrother" />
-            <MemoPerson id="BigBrother2" >
-                <div></div>
-            </MemoPerson>
+            <Name name={name} />
+            <MemoName name={name} />
         </>
     )
 };
 
-export const MemoInvalid: MemoStory = {
+export const MemoValid: MemoStory = {
     parameters: {
         controls: { hideNoControlsWarning: true },
     },
-    render: () => <MemoInValidTest />,
+    render: () => <MemoValidTest />,
     play: async ({ canvasElement }) => {
         const canvas = await within(canvasElement);
 
@@ -61,11 +51,7 @@ export const MemoInvalid: MemoStory = {
         ).toBeInTheDocument();
 
         expect(
-            canvas.getByText('MemoPerson Tom was rendered 2 times')
-        ).toBeInTheDocument();
-
-        expect(
-            canvas.getByText('MemoPerson Jerry was rendered 2 times')
+            canvas.getByText('Hello: T, MemoName was rendered 2 times')
         ).toBeInTheDocument();
 
         await userEvent.type(canvas.getByTestId('age'), '12');
@@ -75,19 +61,7 @@ export const MemoInvalid: MemoStory = {
         ).toBeInTheDocument();
 
         expect(
-            canvas.getByText('Age is 12, MemoAge was rendered 3 times')
-        ).toBeInTheDocument();
-
-        expect(
-            canvas.getByText('MemoPerson Tom was rendered 4 times')
-        ).toBeInTheDocument();
-
-        expect(
-            canvas.getByText('MemoPerson Jerry was rendered 4 times')
-        ).toBeInTheDocument();
-
-        expect(
-            canvas.getByText('MemoPerson BigBrother was rendered 1 times')
+            canvas.getByText('Hello: T, MemoName was rendered 2 times')
         ).toBeInTheDocument();
     }
 }

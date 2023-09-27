@@ -1,0 +1,92 @@
+import "../../../src/components/dolls.less";
+
+import {
+  Meta,
+  Primary,
+  Controls,
+  Story,
+  Source,
+  Canvas,
+  ArgTypes,
+} from "@storybook/blocks";
+
+import * as Stories from "./useState.stories";
+
+import { Summary } from "litten";
+
+<Meta of={Stories} />
+
+# Memo
+
+<Summary color="note">
+  测试连续设置相同的值（Tom），组件的渲染情况。
+  <div>
+    <strong>结论：</strong>
+    state和props，如果接收到相同的值，不会重新渲染（re-render）
+  </div>
+</Summary>
+
+## Components（测试使用的组件）
+
+### Name
+
+<Summary color="deep">
+  接收外部参数<code>name</code>，并记录自身的渲染次数。
+</Summary>
+
+<Source code={
+  `
+import React, { useRef } from 'react';
+
+export const Name = (props: {
+    name: string
+}) => {
+    const { name } = props;
+    const renderCount = useRef(0);
+    renderCount.current = renderCount.current + 1;
+
+    console.log(\`%c Name was rendered at \${new Date().toLocaleTimeString()}\`, 'color: #6F8AB7');
+
+    return (
+        <div>
+            {\`Hello: \${name}, Name was rendered \${renderCount.current} times\`}
+        </div>
+    )
+
+};
+`
+} language="tsx" dark />
+
+## Test（测试页面）
+
+### SetStateTest
+
+<Source code={
+`
+import React, { useRef, useState } from 'react';
+
+import { Button } from "litten";
+
+import { Name } from "../../components/useState/name";
+
+const SetStateTest = () => {
+const renderCount = useRef(0);
+renderCount.current = renderCount.current + 1;
+
+    const [name, setName] = useState('Jerry');
+
+    function handleBtuClick() {
+        setName('Tom');
+    }
+
+    return (
+        <>
+            <p>{\`Name is \${name},Parent Control "SetStateTest" is renderd \${renderCount.current} times\`}</p>
+            <Name name={name} />
+            <Button onClick={handleBtuClick}>Set Name to Tom</Button>
+        </>
+    )
+
+};
+`
+} language="tsx" dark />
