@@ -1,6 +1,6 @@
 {
   "name": "dolls",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": false,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -35,7 +35,7 @@
       "plugin:storybook/recommended"
     ],
     "rules": {
-      "testing-library/prefer-screen-queries":0
+      "testing-library/prefer-screen-queries": 0
     }
   },
   "browserslist": {
