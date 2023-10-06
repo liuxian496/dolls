@@ -1,4 +1,5 @@
 import type { StorybookConfig } from "@storybook/react-webpack5";
+
 const config: StorybookConfig = {
   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
   addons: [
@@ -13,7 +14,17 @@ const config: StorybookConfig = {
         }
       }
     },
-    '@storybook/addon-coverage',
+    // "@storybook/addon-coverage",
+    {
+      name: '@storybook/addon-coverage',
+      options: {
+        istanbul: {
+          include: ['**'],
+          exclude: ['**/src/test/**'],
+          excludeNodeModules: true,
+        },
+      },
+    },
     {
       name: '@storybook/addon-styling',
       options: {
