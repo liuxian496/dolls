@@ -1,30 +1,33 @@
-import '../../../src/components/dolls.less';
+import "../../../src/components/dolls.less";
 
 import {
-  Meta,
-  Primary,
-  Controls,
-  Story,
-  Source,
-  Canvas,
-  ArgTypes,
+    Meta,
+    Primary,
+    Controls,
+    Story,
+    Source,
+    Canvas,
+    Description,
+    ArgTypes,
 } from "@storybook/blocks";
 
 import * as MemoStories from "./memo.stories.tsx";
 
-import { Summary } from 'litten';
+import { Summary, Color } from "litten";
 
 <Meta of={MemoStories} />
 
 # Memo
 
-<Summary color="note">测试 React memo，何时有效，何时无效。</Summary>
+<Summary color={Color.note}>测试 React memo，何时有效，何时无效。</Summary>
 
-## Components（测试使用的组件）
+## 测试使用的组件
 
-### Name
+### 1. Name
 
-<Summary color="note">接收外部参数<code>name</code>，并记录自身的渲染次数。</Summary>
+<Summary color={Color.note}>
+    接收外部参数<code>name</code>，并记录自身的渲染次数。
+</Summary>
 
 <Source code={
   `
@@ -49,9 +52,12 @@ export const Name = (props: {
 `
 } language="tsx" dark />
 
-### MemoName
+### 2. MemoName
 
-<Summary color="note">接收外部参数<code>name</code>，并记录自身的渲染次数。使用<code>memo</code>，将组件memoized</Summary>
+<Summary color={Color.note}>
+    接收外部参数<code>name</code>，并记录自身的渲染次数。使用<code>memo</code>
+    ，将组件memoized
+</Summary>
 
 <Source code={
 `
@@ -76,9 +82,12 @@ export const MemoName = memo(function MemoName(props: {
 `
 } language="tsx" dark />
 
-### MemeAge
+### 3. MemeAge
 
-<Summary color="note">接收外部参数<code>age</code>，并记录自身的渲染次数。使用<code>memo</code>，将组件memoized</Summary>
+<Summary color={Color.note}>
+    接收外部参数<code>age</code>，并记录自身的渲染次数。使用<code>memo</code>
+    ，将组件memoized
+</Summary>
 
 <Source code={
 `
@@ -103,9 +112,11 @@ export const MemoAge = memo(function MemoMessage(props: {
 `
 } language="tsx" dark />
 
-### MemoPerson
+### 4. MemoPerson
 
-<Summary color="note">容器组件，并记录自身的渲染次数。使用<code>memo</code>，将组件memoized</Summary>
+<Summary color={Color.note}>
+    容器组件，并记录自身的渲染次数。使用<code>memo</code>，将组件memoized
+</Summary>
 
 <Source code={
 `
@@ -129,57 +140,133 @@ export const MemoPerson = memo(function MemoPerson(props: any) {
 `
 } language="tsx" dark />
 
-## Test（测试页面）
+## 测试
 
-### MemoValidTest
+### 1. MemoValidTest
 
-<Source code={
-`
-import React, { useState } from 'react';
-import { Name } from '../components/memo/name';
-import { MemoName } from '../components/memo/memoName';
+<Summary color={Color.note}>
+    <p>
+        <code>Name</code>组件没有使用memo，<code>MemoName</code>组件使用了memo。
+        两者都接收外部参数<code>name</code>。通过对不同的input进行输入，记录两者的渲染次数。
+        初始化时，两个组件都渲染了1次。
+    </p>
+    <Canvas of={MemoStories.MemoValid} source={{
+        language:"tsx",
+        code:`
+    import React, { useState } from 'react';
+    import { Name } from '../components/memo/name';
+    import { MemoName } from '../components/memo/memoName';
 
-export const MemoValidTest = () => {
-    const [name, setName] = useState('');
-    const [age, setAge] = useState('');
+    export const MemoValidTest = () => {
+        const [name, setName] = useState('');
+        const [age, setAge] = useState('');
 
-    function handleNameChange(e: any) {
-        setName(e.target.value);
+        function handleNameChange(e: any) {
+            setName(e.target.value);
+        }
+
+        function handleAgeChange(e: any) {
+            setAge(e.target.value);
+        }
+
+        return (
+            <>
+                <label>
+                    Name{': '}
+                    <input data-testid="name" value={name} onChange={handleNameChange} />
+                </label>
+                <label>
+                    Age{': '}
+                    <input data-testid="age" value={age} onChange={handleAgeChange} />
+                </label>
+                <Name name={name} />
+                <MemoName name={name} />
+            </>
+        )
+
     }
+        `
+    }} />
+    <Summary>
+        <p>
+            现在请在Name输入框中输入字母<code>T</code>
+        </p>
+        <p>
+        <code>Name</code>和<code>MemoName</code>被重新渲染，总计被渲染了2次。此时的输出的记录是
+            <p>
+            Hello: T, Name was rendered 2 times
+            </p>
+            <p>
+            Hello: T, MemoName was rendered 2 times
+            </p>
+        </p>
+    </Summary>
+    <Summary>
+        <p>
+            再对Age输入框中输入数字<code>12</code>
+        </p>
+        <p>
+        <code>Name</code>被重新渲染，总计被渲染了4次，<code>MemoName</code>的渲染次数不变，还是2次。此时的输出的记录是
+            <p>
+            Hello: T, Name was rendered 4 times
+            </p>
+            <p>
+            Hello: T, MemoName was rendered 2 times
+            </p>
+        </p>
+    </Summary>
 
-    function handleAgeChange(e: any) {
-        setAge(e.target.value);
-    }
+</Summary>
+<Summary color={Color.note}>
+    结论：使用memo的组件跳过了重新渲染。
+</Summary>
+<Summary>
+    PS：MemoValid Story自动测试了上述步骤 
+</Summary>
 
-    return (
-        <>
-            <label>
-                Name{': '}
-                <input data-testid="name" value={name} onChange={handleNameChange} />
-            </label>
-            <label>
-                Age{': '}
-                <input data-testid="age" value={age} onChange={handleAgeChange} />
-            </label>
-            <Name name={name} />
-            <MemoName name={name} />
-        </>
-    )
+### 2. MemoInValidTest
 
-}
-`
-} language="tsx" dark />
+<Summary color={Color.note}>
+    <p>
+        这个测试中同样有两个输入框，封闭式Name和Age，在输入时分别会是<code>setName</code>和<code>setAge</code>
+    </p>
+    <p>
+        <code>MemoPerson</code>是一个使用memo的组件。
+    </p>
+    测试时这样设计的：
+    <p>
+        第1个<code>MemoPerson</code>组件，id是<code>Tom</code>，包含了一个没有使用memo的子组件<code>Name</code>组件。
+        <code>Name</code>组件接收外部参数<code>name</code>
+    </p>
+    <p>
+        第2个<code>MemoPerson</code>组件，id是<code>Jerry</code>，包含了一个使用memo的子组件<code>MemoAge</code>组件。
+        <code>MemoAge</code>组件接收外部参数<code>age</code>
+    </p>
+    <p>
+        第3个<code>MemoPerson</code>组件不包含任何子组件，id是<code>BigBrother</code>。
 
-### MemoInValidTest
+    </p>
+    <p>
+        第4个<code>MemoPerson</code>组件，id是<code>BigBrother2</code>，包含了一个<code>div</code>
+    </p>
+    <p>
+    通过对不同的input进行输入，记录它们的渲染次数。初始化时，都渲染了1次。
+    </p>
+    <Canvas of={MemoStories.MemoInvalid} source={{
+        language:"tsx",
+        code:`import React, { useState } from 'react';
 
-<Source code={
-`
-import React, { useState } from 'react';
-import { MemoPerson } from '../components/memo/memoPerson';
-import { Name } from '../components/memo/name';
-import { MemoAge } from '../components/memo/memoAge';
+import { expect } from '@storybook/jest';
+import { userEvent, within } from '@storybook/testing-library';
 
-export const MemoInValidTest = () => {
+import { MemoStory } from '../../stories/memo/memo.stories';
+
+import { MemoPerson } from '../../components/memo/memoPerson';
+import { Name } from '../../components/memo/name';
+import { MemoAge } from '../../components/memo/memoAge';
+
+
+const MemoInValidTest = () => {
     const [name, setName] = useState('');
     const [age, setAge] = useState('');
 
@@ -213,10 +300,69 @@ export const MemoInValidTest = () => {
             </MemoPerson>
         </>
     )
+};`
+    }} />
 
-}
-`
-} language="tsx" dark />
+    <Summary>
+        <p>
+            现在请在Name输入框中输入字母<code>T</code>
+        </p>
+        <p>
+            <code>Tom</code>、<code>Jerry</code>、<code>BigBrother2</code>没有跳过重新渲染，总计被渲染了2次。<code>BigBrother</code>跳过了重新渲染。此时的输出的记录是
+            <p>
+                MemoPerson Tom was rendered 2 times
+            </p>
+            <p>
+                Hello: T, Name was rendered 2 times
+            </p>
+            <p>
+                MemoPerson Jerry was rendered 2 times
+            </p>
+            <p>
+                Age is , MemoAge was rendered 1 times
+            </p>
+            <p>
+                MemoPerson BigBrother was rendered 1 times
+            </p>
+            <p>
+               MemoPerson BigBrother2 was rendered 2 times
+            </p>
+        </p>
+    </Summary>
+    <Summary>
+        <p>
+            再对Age输入框中输入数字<code>12</code>
+        </p>
+        <p>
+            <code>Tom</code>、<code>Jerry</code>、<code>BigBrother2</code>没有跳过重新渲染，总计被渲染了4次。<code>BigBrother</code>跳过了重新渲染。此时的输出的记录是
+            <p>
+                MemoPerson Tom was rendered 4 times
+            </p>
+            <p>
+                Hello: T, Name was rendered 4 times
+            </p>
+            <p>
+                MemoPerson Jerry was rendered 4 times
+            </p>
+            <p>
+                Age is 12, MemoAge was rendered 3 times
+            </p>
+            <p>
+                MemoPerson BigBrother was rendered 1 times
+            </p>
+            <p>
+               MemoPerson BigBrother2 was rendered 4 times
+            </p>
+        </p>
+    </Summary>
+</Summary>
+<Summary color={Color.deep}>
+    结论：当一个memoized化的组件作为父组件使用时，为了检测它包含的子组件是否需要重新渲染，它自身必须重新渲染。所以memo并不能保证一定会跳过组件的重新渲染。
+</Summary>
+<Summary>
+    PS：MemoInvalid Story自动测试了上述步骤 
+</Summary>
+
 
 {/* <Primary /> */}
 
