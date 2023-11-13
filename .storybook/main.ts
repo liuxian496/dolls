@@ -20,7 +20,6 @@ const config: StorybookConfig = {
       options: {
         istanbul: {
           include: ['**'],
-          exclude: ['**/src/test/**'],
           excludeNodeModules: true,
         },
       },
