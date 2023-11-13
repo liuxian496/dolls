@@ -1,4 +1,4 @@
-import { Summary, Color } from "litten";
+import { Summary } from "litten";
 
 import { MathStory } from "../../stories/math/math.stories";
 
